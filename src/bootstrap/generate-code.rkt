@@ -98,9 +98,9 @@
                             (λ (snippet)
                               (let* ([current-content (snippet 'content)]
                                      [new-content (if current-content
-                                                      (string-append current-content
-                                                                     "\n"
-                                                                     code-line)
+                                                      (str current-content
+                                                           "\n"
+                                                           code-line)
                                                       code-line)])
                                 (snippet 'content new-content))))))]
 
@@ -158,7 +158,7 @@
 (define (include-code-snippets snippets-hash)
   (local [(define (indent-code code indentation)
             (string-join (~>> (string-split code "\n")
-                           (map (λ (line) (string-append indentation line))))
+                           (map (λ (line) (str indentation line))))
                          "\n"))
 
           (define (get-snippet-indentation line)
@@ -186,15 +186,13 @@
                                            #:literate-path       literate-path
                                            #:line-number         line-number
                                            #:indentation         indentation)
-            (string-append indentation
-                           +comment-syntax+
-                           " "
-                           (~> (find-relative-path (expand-path generated-code-path)
-                                                   (expand-path literate-path))
-                             path->string
-                             (string-append ":"
-                                            (number->string line-number)
-                                            "\n"))))
+            (str indentation
+                 +comment-syntax+
+                 " "
+                 (~> (find-relative-path (expand-path generated-code-path)
+                                         (expand-path literate-path))
+                     path->string
+                     (str ":" line-number "\n"))))
 
           (define (contains-include-instruction? text)
             (or (regexp-match? +include-regexp-for-text+ text)
@@ -210,12 +208,12 @@
 
                        [literate-doc-line-number (included-snippet 'line-number)]
                        [literate-path            (included-snippet 'literate-path)])
-                  (string-append (get-ref-to-literate-doc
-                                  #:generated-code-path generated-code-path
-                                  #:literate-path       literate-path
-                                  #:line-number         literate-doc-line-number
-                                  #:indentation         indentation)
-                                 new-line))
+                  (str (get-ref-to-literate-doc
+                        #:generated-code-path generated-code-path
+                        #:literate-path       literate-path
+                        #:line-number         literate-doc-line-number
+                        #:indentation         indentation)
+                       new-line))
                 line))
 
           ;;
