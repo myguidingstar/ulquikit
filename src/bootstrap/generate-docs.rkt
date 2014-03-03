@@ -73,14 +73,14 @@
 ;; Return all filenames of all CSS files in `./css/`.
 ;;
 (define (get-css-filenames)
-  (~>> (directory-list (string-append (get-bootstrap-dir) "css/"))
+  (~>> (directory-list (str (get-bootstrap-dir) "css/"))
     (map path->string)))
 
 ;;
 ;; Return all filenames of all CSS files in `./css/`.
 ;;
 (define (get-js-filenames)
-  (~>> (directory-list (string-append (get-bootstrap-dir) "js/"))
+  (~>> (directory-list (str (get-bootstrap-dir) "js/"))
     (map path->string)))
 
 ;;
@@ -105,12 +105,12 @@
 (define (generate-html-template content toc
                                 #:title [title ""])
   `(html (head ,@(~>> (get-css-filenames)
-                   (map (λ (filename) (html/css (string-append "css/" filename)))))
+                   (map (λ (filename) (html/css (str "css/" filename)))))
                (title ,title))
          (body (%verbatim ,toc)
                (%verbatim ,content)
                ,@(~>> (get-js-filenames)
-                   (map (λ (filename) (html/js (string-append "js/" filename)))))
+                   (map (λ (filename) (html/js (str "js/" filename)))))
                )))
 
 ;;
